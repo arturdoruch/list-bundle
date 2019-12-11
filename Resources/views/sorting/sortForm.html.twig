@@ -1,0 +1,12 @@
+<form action="{{ action }}" method="get" name="ad-list__sort">
+    {% import '@ArturDoruchList/inputRenderer.html.twig' as inputRenderer %}
+    {% for name, value in queryParameters %}
+        {{ inputRenderer.render(name, value) }}
+    {% endfor %}
+    <label for="{{ sort.name }}">Sort by</label>
+    <select name="{{ sort.name }}" onchange="this.form.submit()" class="form-control" style="display: inline-block; width: auto">
+        {% for value, label in sort.options %}
+        <option value="{{ value }}"{% if sort.currentValue == value %} selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+</form>

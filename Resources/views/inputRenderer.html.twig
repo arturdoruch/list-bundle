@@ -1,0 +1,10 @@
+{% macro render(name, value) %}
+    {% import _self as this %}
+    {% if value is iterable %}
+        {% for _name, _value in value %}
+            {{ this.render(name ~ '[' ~ _name ~ ']', _value) }}
+        {% endfor %}
+    {% else %}
+        <input type="hidden" name="{{ name }}" value="{{ value }}"/>
+    {% endif %}
+{% endmacro %}

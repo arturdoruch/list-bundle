@@ -1,0 +1,22 @@
+{
+    "name": "arturdoruch/list-bundle",
+    "description": "Pagination, sorting and filtering list items.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["list items", "pagination", "sorting", "filtering", "symfony"],
+    "authors": [
+        {
+            "name": "Artur Doruch",
+            "email": "arturdoruch@interia.pl"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": ">=3.3",
+        "twig/extensions": "^2.0",
+        "arturdoruch/js-bundle": "^2.2.6",
+        "arturdoruch/js-vendor-bundle": "^2.1"
+    },
+    "autoload": {
+        "psr-4" : { "ArturDoruch\\ListBundle\\" : "" }
+    }
+}

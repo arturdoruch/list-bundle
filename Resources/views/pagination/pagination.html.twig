@@ -1,0 +1,13 @@
+<nav role="navigation">
+    <ul class="pagination ad-list__pagination">
+        {% for item in items %}
+            {% if item.url is defined %}
+                <li><a href="{{ item.url }}">{{ item.label|raw }}</a></li>
+            {% elseif item.active is defined %}
+                <li class="active"><span>{{ item.label }}</span></li>
+            {% elseif item.skipped is defined %}
+                <li><span>...</span></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>

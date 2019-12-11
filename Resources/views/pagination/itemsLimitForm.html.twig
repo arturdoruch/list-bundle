@@ -1,0 +1,12 @@
+<form action="{{ action }}" method="get" name="ad-list__limit">
+    {% import '@ArturDoruchList/inputRenderer.html.twig' as inputRenderer %}
+    {% for name, value in queryParameters %}
+        {{ inputRenderer.render(name, value) }}
+    {% endfor %}
+    <select name="{{ limit.name }}" onchange="this.form.submit()" class="form-control" style="display: inline-block; width: auto">
+        {% for value in limit.values %}
+        <option value="{{ value }}"{% if limit.currentValue == value %} selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+    </select>
+    <span>items per page</span>
+</form>

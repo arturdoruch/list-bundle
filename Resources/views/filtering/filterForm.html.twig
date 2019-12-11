@@ -1,0 +1,44 @@
+<div class="ad-list__filter-form-container">
+    {% form_theme form 'bootstrap_3_layout.html.twig' %}
+    {{ form_start(form, {action: action}) }}
+        <div class="ad-list__filter-form-fields">
+            {{ form_errors(form) }}
+            {{ form_rest(form) }}
+        </div>
+        <div class="ad-list__filter-form-buttons text-right">
+            <button type="reset" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Reset</button>
+            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span> Filter</button>
+        </div>
+    {% import '@ArturDoruchList/inputRenderer.html.twig' as inputRenderer %}
+    {% for name, value in queryParameters %}
+        {{ inputRenderer.render(name, value) }}
+    {% endfor %}
+    {{ form_end(form) }}
+</div>
+
+<script type="text/javascript">
+    {# Removes sending empty query parameters. #}
+    /*(function (form) {
+        form.onsubmit = function (e) {
+            e.preventDefault();
+            var elements = form.elements;
+            var regexp = new RegExp('^'+form.name+'\\[');
+            var disabledElements = [];
+
+            for (var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+
+                if (!element.value && element.disabled === false && regexp.test(element.name)) {
+                    element.disabled = true;
+                    disabledElements = element;
+                }
+            }
+
+            form.submit();
+
+            for (i = 0; i < disabledElements.length; i++) {
+                disabledElements[i].disabled = false;
+            }
+        }
+    })({{ formName }})*/
+</script>
