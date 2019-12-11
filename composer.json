@@ -12,7 +12,6 @@
     ],
     "require": {
         "symfony/framework-bundle": ">=3.3",
-        "twig/extensions": "^2.0",
         "arturdoruch/js-bundle": "^2.2.6",
         "arturdoruch/js-vendor-bundle": "^2.1"
     },
