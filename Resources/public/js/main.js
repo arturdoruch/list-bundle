@@ -13,7 +13,7 @@
 
         packages: [
             {
-                name: 'js',
+                name: 'arturdoruchJs',
                 location: jsBundle
             },
             {

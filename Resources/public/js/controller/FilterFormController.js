@@ -3,9 +3,9 @@
  */
 
 define([
-    'js/component/eventManager',
-    'js/component/Form/Form',
-    'js/util/urlUtils'
+    'arturdoruchJs/component/eventManager',
+    'arturdoruchJs/component/Form/Form',
+    'arturdoruchJs/util/urlUtils'
 ], function(em, Form, urlUtils) {
 
     var defaultOptions = {

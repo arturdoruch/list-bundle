@@ -3,8 +3,8 @@
  */
 
 define([
-    'js/component/eventManager',
-    'js/component/Form/Form'
+    'arturdoruchJs/component/eventManager',
+    'arturdoruchJs/component/Form/Form'
 ], function(em, Form) {
 
     var Class = function (formSelector) {

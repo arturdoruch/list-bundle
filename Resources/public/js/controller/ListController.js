@@ -3,18 +3,19 @@
  */
 
 define([
-    'js/component/eventManager',
-    'js/component/ajax',
-    'js/util/urlUtils',
-    './FormController'
-], function(em, ajax, urlUtils, FormController) {
+    'arturdoruchJs/component/eventManager',
+    'arturdoruchJs/component/ajax',
+    'arturdoruchJs/util/urlUtils',
+    './FormController',
+    './LinkController'
+], function(em, ajax, urlUtils, FormController, LinkController) {
 
     var defaultOptions = {
         gettingItemsMessage: null,
         gettingItemsLoader: true,
         paginationListSelector: 'ul.ad-list__pagination',
-        limitFormSelector: 'form[name="ad-list__limit"]',
         sortLinkSelector: 'a.ad-list__sort-link',
+        limitFormSelector: 'form[name="ad-list__limit"]',
         sortFormSelector: 'form[name="ad-list__sort"]'
     };
 
@@ -37,8 +38,10 @@ define([
         this.options = $.extend(defaultOptions, options);
         this.updateListeners = [];
 
-        this.limitFormController = new FormController(this.options.limitFormSelector);
-        this.sortFormController = new FormController(this.options.sortFormSelector);
+        this._limitFormController = new FormController(this.options.limitFormSelector);
+        this._sortFormController = new FormController(this.options.sortFormSelector);
+        this._paginationLinkController = new LinkController(this.options.paginationListSelector + ' a');
+        this._sortLinkController = new LinkController(this.options.sortLinkSelector);
 
         this._attachListeners(self);
         this._attachEvents();
@@ -69,17 +72,10 @@ define([
         },
 
         _attachEvents: function() {
-            var self = this;
-            var selectorList = [this.options.paginationListSelector + ' a', this.options.sortLinkSelector];
-
-            for (var i in selectorList) {
-                em.on('click', this.$listContainer.find(selectorList[i]), function (e) {
-                    self._getAndUpdateList(e.target.href);
-                });
-            }
-
-            this.limitFormController.attachEvent(this.$listContainer);
-            this.sortFormController.attachEvent(this.$listContainer);
+            this._paginationLinkController.attachEvent(this.$listContainer);
+            this._sortLinkController.attachEvent(this.$listContainer);
+            this._limitFormController.attachEvent(this.$listContainer);
+            this._sortFormController.attachEvent(this.$listContainer);
         },
 
         /**
