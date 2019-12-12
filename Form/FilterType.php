@@ -7,9 +7,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
+ * The filter list form type.
+ *
  * @author Artur Doruch <arturdoruch@interia.pl>
  */
-class FilterFormType extends AbstractType
+class FilterType extends AbstractType
 {
     /**
      * @inheritDoc
