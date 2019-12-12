@@ -1,3 +1,6 @@
+/*!
+ * (c) 2019 Artur Doruch <arturdoruch@interia.pl>
+ */
 
 define(['arturdoruchJs/component/eventManager'], function(em) {
 

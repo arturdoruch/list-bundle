@@ -2,23 +2,26 @@
 (function() {
 
     var bundlesDir = '../../../bundles',
-        listBundle = bundlesDir + '/arturdoruchlist/js',
-        jsBundle = bundlesDir + '/arturdoruchjs/js',
-        jsVendorBundle = bundlesDir + '/arturdoruchjsvendor/js';
+        listDir = bundlesDir + '/arturdoruchlist/js',
+        jsDir = bundlesDir + '/arturdoruchjs/js',
+        jsVendorDir = bundlesDir + '/arturdoruchjsvendor/js';
 
     requirejs.config({
-        paths: {
-            jquery: jsVendorBundle + '/jquery/jquery.min'
-        },
-
+        /*paths: {
+            jquery: jsVendorDir + '/jquery/jquery.min'
+        },*/
         packages: [
             {
                 name: 'arturdoruchJs',
-                location: jsBundle
+                location: jsDir
+            },
+            {
+                name: 'arturdoruchJsVendor',
+                location: jsVendorDir
             },
             {
                 name: 'arturdoruchList',
-                location: listBundle
+                location: listDir
             }
         ]
     });
