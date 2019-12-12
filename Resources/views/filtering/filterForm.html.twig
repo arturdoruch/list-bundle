@@ -16,9 +16,11 @@
     {{ form_end(form) }}
 </div>
 
+{#
 <script type="text/javascript">
-    {# Removes sending empty query parameters. #}
-    /*(function (form) {
+    #}
+{# Removes sending empty query parameters. #}{#
+    (function (form) {
         form.onsubmit = function (e) {
             e.preventDefault();
             var elements = form.elements;
@@ -40,5 +42,5 @@
                 disabledElements[i].disabled = false;
             }
         }
-    })({{ formName }})*/
-</script>
+    })({{ formName }})
+</script>#}
