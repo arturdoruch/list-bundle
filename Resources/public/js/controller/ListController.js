@@ -16,7 +16,8 @@ define([
         paginationListSelector: 'ul.ad-list__pagination',
         sortLinkSelector: 'a.ad-list__sort-link',
         limitFormSelector: 'form[name="ad-list__limit"]',
-        sortFormSelector: 'form[name="ad-list__sort"]'
+        sortFormSelector: 'form[name="ad-list__sort"]',
+        addHistoryState: true
     };
 
     /**
@@ -29,10 +30,14 @@ define([
      * @param {string}   [options.limitFormSelector]
      * @param {string}   [options.sortLinkSelector]
      * @param {string}   [options.sortFormSelector]
-     *
+     * @param {boolean}  [options.addHistoryState = true] Whether to add list state to the browser session history stack, after ajax request.
      */
     var ListController = function(listContainer, filterFormController, options) {
         var self = this;
+
+        if (!listContainer) {
+            throw new Error('ListController: Missing listContainer argument.');
+        }
 
         this.$listContainer = $(listContainer);
         this.options = $.extend(defaultOptions, options);
@@ -88,8 +93,8 @@ define([
 
             ajax.send(url, this.options.gettingItemsMessage, this.options.gettingItemsLoader)
                 .done(function(html) {
-                    if (location.pathname === urlUtils.parseUrl(url).pathname) {
-                        setLocation(url, html);
+                    if (self.options.addHistoryState === true) {
+                        addHistoryState(url, html);
                     }
                     self._updateList(html);
                 })
@@ -108,10 +113,7 @@ define([
         }
     };
 
-    /**
-     * Sets history state.
-     */
-    function setLocation(url, html) {
+    function addHistoryState(url, html) {
         history.pushState(html, '', url);
     }
 
