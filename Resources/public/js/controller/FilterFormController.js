@@ -28,6 +28,10 @@ define([
      * @param {bool}   [filterAfterReset = true]
      */
     var Class = function (formSelector, options) {
+        if (!formSelector) {
+            throw new Error('FilterFormController: Missing "formSelector" argument.');
+        }
+
         this.form = new Form(formSelector);
         this.options = $.extend(defaultOptions, options);
         this.queryParameterNames = $('div[data-query-parameter-names]').data('queryParameterNames');
