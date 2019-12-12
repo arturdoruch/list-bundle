@@ -49,7 +49,7 @@ class QueryParameterBag
      */
     public function getSort($field = null, $direction = 'asc')
     {
-        $default = $field ? QuerySortHelper::create($field, $direction) : null;
+        $default = $field ? QuerySortHelper::create($field, $direction) : '';
         $value = $this->query->get(QueryParameterNames::getSort(), $default);
 
         return QuerySortHelper::parse($value);
