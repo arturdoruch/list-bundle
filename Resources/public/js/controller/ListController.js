@@ -5,10 +5,11 @@
 define([
     'arturdoruchJs/component/eventManager',
     'arturdoruchJs/component/ajax',
+    'arturdoruchJs/component/ProcessNoticer',
     'arturdoruchJs/util/urlUtils',
     './FormController',
     './LinkController'
-], function(em, ajax, urlUtils, FormController, LinkController) {
+], function(em, ajax, ProcessNoticer, urlUtils, FormController, LinkController) {
 
     var defaultOptions = {
         gettingItemsMessage: null,
@@ -38,6 +39,8 @@ define([
         if (!listContainer) {
             throw new Error('ListController: Missing listContainer argument.');
         }
+
+        ajax.setProcessNoticer(new ProcessNoticer());
 
         this.$listContainer = $(listContainer);
         this.options = $.extend(defaultOptions, options);
