@@ -3,7 +3,7 @@
 namespace ArturDoruch\ListBundle\Templating;
 
 use ArturDoruch\ListBundle\Request\QueryParameterNames;
-use ArturDoruch\ListBundle\Request\QuerySortHelper;
+use ArturDoruch\ListBundle\Request\QuerySort;
 use ArturDoruch\ListBundle\Sorting\SortChoiceCollection;
 
 /**
@@ -25,12 +25,13 @@ class SortingHelper
     }
 
     /**
+     * @param string $label
      * @param string $field
      * @param string $defaultDirection
      *
      * @return array
      */
-    public function prepareSortLinkData(string $field, string $defaultDirection)
+    public function prepareSortLinkData(string $label, string $field, string $defaultDirection)
     {
         $queryParameters = $this->routeHelper->getQueryParameters();
         $currentValue = $queryParameters[QueryParameterNames::getSort()] ?? null;
@@ -38,19 +39,18 @@ class SortingHelper
         $isClicked = false;
 
         if ($currentValue) {
-            $sort = QuerySortHelper::parse($currentValue);
+            $sortData = QuerySort::parse($currentValue);
 
-            foreach ($sort as $currentField => $currentDirection) {
-                if ($currentField === $field) {
-                    $isClicked = true;
-                    $direction = $currentDirection === 'asc' ? 'desc' : 'asc';
-                }
+            if (array_keys($sortData)[0] === $field) {
+                $isClicked = true;
+                $direction = QuerySort::getOppositeDirection($sortData[$field]);
             }
         }
 
-        $url = $this->routeHelper->generateUrl(null, QuerySortHelper::create($field, $direction));
+        $url = $this->routeHelper->generateUrl(null, QuerySort::create($field, $direction));
 
         return [
+            'label' => $label,
             'url' => $url,
             'isClicked' => $isClicked,
             'direction' => $direction,
@@ -71,7 +71,7 @@ class SortingHelper
         $selected = null;
 
         foreach ($sortChoiceCollection->all() as $choice) {
-            $sort = QuerySortHelper::create($choice->getField(), $choice->getDirection());
+            $sort = QuerySort::create($choice->getField(), $choice->getDirection());
             $options[$sort] = $choice->getLabel();
         }
 

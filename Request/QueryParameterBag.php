@@ -42,16 +42,19 @@ class QueryParameterBag
     }
 
     /**
-     * @param string $field The default sort field.
-     * @param string $direction The default sort direction.
+     * @param string $defaultField The default sort field.
+     * @param string $direction The default sort direction. One of values: "asc", "desc".
      *
      * @return array
      */
-    public function getSort($field = null, $direction = 'asc')
+    public function getSort(string $defaultField = null, string $direction = 'asc')
     {
-        $default = $field ? QuerySortHelper::create($field, $direction) : '';
-        $value = $this->query->get(QueryParameterNames::getSort(), $default);
+        $default = $defaultField ? QuerySort::create($defaultField, $direction) : null;
 
-        return QuerySortHelper::parse($value);
+        if ($value = $this->query->get(QueryParameterNames::getSort(), $default)) {
+            return QuerySort::parse($value);
+        }
+
+        return [];
     }
 }

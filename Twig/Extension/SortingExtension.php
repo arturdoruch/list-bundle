@@ -43,14 +43,13 @@ class SortingExtension extends AbstractExtension
      * @param Environment $environment
      * @param string $label
      * @param string $field
-     * @param string $defaultDirection
+     * @param string $defaultDirection One of the value "asc", "desc".
      *
      * @return string
      */
     public function renderSortLink(Environment $environment, $label, $field, $defaultDirection = 'asc')
     {
-        $data = $this->sortingHelper->prepareSortLinkData($field, $defaultDirection);
-        $data['label'] = $label;
+        $data = $this->sortingHelper->prepareSortLinkData($label, $field, $defaultDirection);
 
         return $environment->render('@ArturDoruchList/sorting/sortLink.html.twig', $data);
     }

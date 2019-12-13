@@ -25,13 +25,13 @@ class SortChoice
     /**
      * @param string $label
      * @param string $field
-     * @param string $direction
+     * @param string $direction One of the values "asc", "desc".
      */
     public function __construct($label, $field, $direction)
     {
         $this->label = $label;
         $this->field = $field;
-        $this->direction = strtolower($direction) === 'desc' ? 'desc': 'asc';
+        $this->direction = $direction;
     }
 
     /**

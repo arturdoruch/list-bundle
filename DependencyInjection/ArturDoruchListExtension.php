@@ -25,5 +25,6 @@ class ArturDoruchListExtension extends Extension
         $container->setParameter('arturdoruch_list.pagination.item_limits', $paginationConfig['item_limits']);
         $container->setParameter('arturdoruch_list.pagination.page_items', $paginationConfig['page_items']);
         $container->setParameter('arturdoruch_list.paginator_providers', $config['paginator_providers']);
+        $container->setParameter('arturdoruch_list.query_sort_direction', $config['query_sort_direction'] ?? null);
     }
 }

@@ -3,6 +3,7 @@
 namespace ArturDoruch\ListBundle\DependencyInjection;
 
 use ArturDoruch\ListBundle\Paginator\PaginatorRegistry;
+use ArturDoruch\ListBundle\Request\QuerySort;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -27,6 +28,14 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('page')->defaultValue('page')->end()
                         ->scalarNode('limit')->defaultValue('limit')->end()
                         ->scalarNode('sort')->defaultValue('sort')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('query_sort_direction')
+                    ->children()
+                        ->scalarNode('asc')->treatNullLike('')->end()
+                        ->scalarNode('desc')->treatNullLike('')->end()
+                        ->enumNode('position')->values(QuerySort::getDirectionPositions())->end()
+                        ->scalarNode('separator')->treatNullLike('')->end()
                     ->end()
                 ->end()
                 ->arrayNode('pagination')
