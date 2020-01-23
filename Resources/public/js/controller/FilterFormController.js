@@ -34,6 +34,7 @@ define([
 
         this.form = new Form(formSelector);
         this.options = $.extend(defaultOptions, options);
+        this.currentUrlQuery = null;
         this.queryParameterNames = $('div[data-query-parameter-names]').data('queryParameterNames');
 
         for (var name in this.queryParameterNames) {
@@ -57,13 +58,20 @@ define([
     };
 
     Class.prototype = {
+        /**
+         * @param {string} url The url of the last requested web server controller with list items.
+         */
+        setCurrentUrlQuery: function (url) {
+            this.currentUrlQuery = urlUtils.parseUrl(url).search;
+        },
+
         _filter: function() {
-            var urlParameters = urlUtils.parseQueryString(location.search);
+            var queryParameters = urlUtils.parseQueryString(this.currentUrlQuery || location.search);
 
-            delete urlParameters[this.form.getName()];
-            delete urlParameters[this.queryParameterNames.page];
+            delete queryParameters[this.form.getName()];
+            delete queryParameters[this.queryParameterNames.page];
 
-            var url = this.form.createRequestUrl(true, urlParameters);
+            var url = this.form.createRequestUrl(true, queryParameters);
 
             em.dispatch('arturdoruch_list.update', [url]);
         },
