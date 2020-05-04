@@ -122,7 +122,12 @@ define([
     };
 
     function addHistoryState(url, html) {
-        history.pushState(html, '', url);
+        try {
+            history.pushState(html, '', url);
+        } catch (error) {
+            console.log('An error occurred while pushing data to the browser session history.');
+            console.log(error);
+        }
     }
 
     return ListController;
