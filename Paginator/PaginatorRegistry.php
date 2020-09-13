@@ -13,7 +13,6 @@ class PaginatorRegistry
     private static $registry = [
         \Doctrine\ORM\Query::class => DoctrinePaginator::class,
         \Doctrine\ORM\QueryBuilder::class => DoctrinePaginator::class,
-        \Doctrine\ORM\Query::class => DoctrinePaginator::class,
         \Doctrine\ODM\MongoDB\Query\Query::class => DoctrineMongoDBPaginator::class,
         \Doctrine\ODM\MongoDB\Query\Builder::class => DoctrineMongoDBPaginator::class,
         \Doctrine\MongoDB\CursorInterface::class => DoctrineMongoDBPaginator::class,
