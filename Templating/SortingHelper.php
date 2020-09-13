@@ -27,15 +27,15 @@ class SortingHelper
     /**
      * @param string $label
      * @param string $field
-     * @param string $defaultDirection
+     * @param string $initialDirection
      *
      * @return array
      */
-    public function prepareSortLinkData(string $label, string $field, string $defaultDirection)
+    public function prepareSortLinkData(string $label, string $field, string $initialDirection)
     {
         $queryParameters = $this->routeHelper->getQueryParameters();
         $currentValue = $queryParameters[QueryParameterNames::getSort()] ?? null;
-        $direction = $defaultDirection;
+        $direction = $initialDirection;
         $isClicked = false;
 
         if ($currentValue) {

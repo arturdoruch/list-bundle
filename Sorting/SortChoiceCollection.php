@@ -15,11 +15,11 @@ class SortChoiceCollection
     /**
      * @param string $label
      * @param string $field
-     * @param string $direction
+     * @param string $direction Sorting direction. One of the values "asc", "desc".
      *
      * @return $this
      */
-    public function add($label, $field, $direction)
+    public function add(string $label, string $field, string $direction)
     {
         $this->choices[] = new SortChoice($label, $field, $direction);
 

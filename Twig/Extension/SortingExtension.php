@@ -38,33 +38,31 @@ class SortingExtension extends AbstractExtension
     }
 
     /**
+     * Renders a link (an anchor) sorting the list items.
+     *
      * https://specs.openstack.org/openstack/api-wg/guidelines/pagination_filter_sort.html
      *
      * @param Environment $environment
      * @param string $label
      * @param string $field
-     * @param string $defaultDirection One of the value "asc", "desc".
+     * @param string $initialDirection Initial sort direction. One of the values: "asc", "desc".
      *
      * @return string
      */
-    public function renderSortLink(Environment $environment, $label, $field, $defaultDirection = 'asc')
+    public function renderSortLink(Environment $environment, $label, $field, $initialDirection = 'asc')
     {
-        $data = $this->sortingHelper->prepareSortLinkData($label, $field, $defaultDirection);
+        $data = $this->sortingHelper->prepareSortLinkData($label, $field, $initialDirection);
 
         return $environment->render('@ArturDoruchList/sorting/sortLink.html.twig', $data);
     }
 
     /**
-     * Renders HTML select element with options to sort list items.
+     * Renders select element with options to sort list items.
      *
      * @param Environment $environment
      * @param SortChoiceCollection $sortChoiceCollection
-     * @return string
-     * @internal param array $choices Collection of sorting choices with keys:
-     *  - label
-     *  - field
-     *  - direction
      *
+     * @return string
      */
     public function renderSortForm(Environment $environment, SortChoiceCollection $sortChoiceCollection)
     {

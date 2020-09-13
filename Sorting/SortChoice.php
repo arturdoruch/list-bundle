@@ -25,9 +25,9 @@ class SortChoice
     /**
      * @param string $label
      * @param string $field
-     * @param string $direction One of the values "asc", "desc".
+     * @param string $direction Sorting direction. One of the values "asc", "desc".
      */
-    public function __construct($label, $field, $direction)
+    public function __construct(string $label, string $field, string $direction)
     {
         $this->label = $label;
         $this->field = $field;
