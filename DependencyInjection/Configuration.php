@@ -73,6 +73,17 @@ class Configuration implements ConfigurationInterface
                     ->info('The collection of paginator providers with "query class: paginator class" pairs.')
                     ->scalarPrototype()->end()
                 ->end()
+                ->arrayNode('filter_form')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('display_reset_button')->defaultTrue()
+                            ->info('Whether to display button resetting the filter form elements.')
+                        ->end()
+                        ->booleanNode('reset_sorting')->defaultFalse()
+                            ->info('Whether to reset list sorting after filtering the list.')
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
