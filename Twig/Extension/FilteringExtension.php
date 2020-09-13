@@ -19,9 +19,24 @@ class FilteringExtension extends AbstractExtension
      */
     private $filterFormHelper;
 
-    public function __construct(FilterFormHelper $filterFormHelper)
+    /**
+     * @var Environment
+     */
+    private $environment;
+
+    /**
+     * @var array Filtering config.
+     */
+    private $config = [
+        'display_reset_button' => true,
+        'reset_sorting' => false,
+    ];
+
+    public function __construct(FilterFormHelper $filterFormHelper, Environment $environment, array $filterFormConfig)
     {
         $this->filterFormHelper = $filterFormHelper;
+        $this->environment = $environment;
+        $this->config = $filterFormConfig + $this->config;
     }
 
 
@@ -29,33 +44,33 @@ class FilteringExtension extends AbstractExtension
     {
         return [
             new TwigFunction('arturdoruch_list_filter_form', [$this, 'renderFilterForm'], [
-                'needs_environment' => true,
                 'is_safe' => ['html']
             ])
         ];
     }
 
     /**
-     * @param Environment $environment
      * @param FormView $formView
-     * @param array $options
-     *  - resetSorting (bool) Default: false. Reset list sorting, by removing query sort parameter from form data.
-     *  - showResetButton (bool) Default: false
+     * @param array $config
+     *  - resetSorting (bool) default: false Whether to reset list sorting after filtering the list.
+     *                                       If true query "sort" parameter is removed from the request query.
+     *  - displayResetButton (bool) default: false Whether to display button resetting the filter form elements.
      *
      * @return string
      */
-    public function renderFilterForm(Environment $environment, FormView $formView, array $options = [])
+    public function renderFilterForm(FormView $formView, array $config = [])
     {
-        $options += [
-            'resetSorting' => false,
-            'showResetButton' => true,
-        ];
+        $config = $this->config + $config;
 
-        $data = $this->filterFormHelper->prepareFormData($formView, $options['resetSorting']);
-        $data['showResetButton'] = $options['showResetButton'];
+        $data = $this->filterFormHelper->prepareFormData($formView, $config['reset_sorting']);
+        $data['displayResetButton'] = $config['display_reset_button'];
 
-        return $environment->render('@ArturDoruchList/filtering/filterForm.html.twig', $data) .
-        "<div data-query-parameter-names='" . json_encode(QueryParameterNames::all()) . "'></div>";
+        $html = $this->environment->render('@ArturDoruchList/filtering/filterForm.html.twig', $data);
+        // Add input elements with data required by JavaScript scripts.
+        $html .= '<input type="hidden" name="list__query-parameter-names" value="' . htmlspecialchars(json_encode(QueryParameterNames::all())) . '">';
+        $html .= '<input type="hidden" name="list__filter-form__reset-sorting[' . $formView->vars['name'] . ']" value="' . (int) ($config['reset_sorting'] === true) . '">';
+
+        return $html;
     }
 }
  

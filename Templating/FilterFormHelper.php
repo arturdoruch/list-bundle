@@ -40,8 +40,8 @@ class FilterFormHelper
         $vars['attr']['novalidate'] = 'novalidate';
 
         $queryParameters = $this->routeHelper->getQueryParameters();
-        unset($queryParameters[QueryParameterNames::getPage()]);
         unset($queryParameters[$formName = $vars['name']]);
+        unset($queryParameters[QueryParameterNames::getPage()]);
 
         if ($removeQuerySortParameter) {
             unset($queryParameters[QueryParameterNames::getSort()]);

@@ -15,6 +15,8 @@ services:
     arturdoruch_list.twig.filter_extension:
         class: ArturDoruch\ListBundle\Twig\Extension\FilteringExtension
         autowire: true
+        arguments:
+            $filterFormConfig: '%arturdoruch_list.filter_form%'
         tags:
             - { name: twig.extension }
 
