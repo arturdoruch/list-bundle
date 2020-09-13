@@ -77,8 +77,18 @@ class ItemList implements \IteratorAggregate, \Countable
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->getIterator());
+    }
+
+    /**
+     * Checks if the list has no items.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
     }
 }

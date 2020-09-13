@@ -38,13 +38,21 @@ class FilteringExtension extends AbstractExtension
     /**
      * @param Environment $environment
      * @param FormView $formView
-     * @param bool $removeQuerySortParameter Whether to remove query sort parameter from send form data.
+     * @param array $options
+     *  - resetSorting (bool) Default: false. Reset list sorting, by removing query sort parameter from form data.
+     *  - showResetButton (bool) Default: false
      *
      * @return string
      */
-    public function renderFilterForm(Environment $environment, FormView $formView, bool $removeQuerySortParameter = false)
+    public function renderFilterForm(Environment $environment, FormView $formView, array $options = [])
     {
-        $data = $this->filterFormHelper->prepareFormData($formView, $removeQuerySortParameter);
+        $options += [
+            'resetSorting' => false,
+            'showResetButton' => true,
+        ];
+
+        $data = $this->filterFormHelper->prepareFormData($formView, $options['resetSorting']);
+        $data['showResetButton'] = $options['showResetButton'];
 
         return $environment->render('@ArturDoruchList/filtering/filterForm.html.twig', $data) .
         "<div data-query-parameter-names='" . json_encode(QueryParameterNames::all()) . "'></div>";

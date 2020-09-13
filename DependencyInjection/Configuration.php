@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('pagination')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('item_limits')
                             ->scalarPrototype()

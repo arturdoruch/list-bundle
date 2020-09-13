@@ -32,6 +32,7 @@ define([
      * @param {string}   [options.sortLinkSelector]
      * @param {string}   [options.sortFormSelector]
      * @param {boolean}  [options.addHistoryState = true] Whether to add list state to the browser session history stack, after ajax request.
+     *                                                    Set false when item list is loaded as modal content, and browser url should not be changed.
      */
     var ListController = function(listContainer, filterFormController, options) {
         var self = this;
@@ -50,6 +51,7 @@ define([
         this._sortFormController = new FormController(this.options.sortFormSelector);
         this._paginationLinkController = new LinkController(this.options.paginationListSelector + ' a');
         this._sortLinkController = new LinkController(this.options.sortLinkSelector);
+        this._filterFormController = filterFormController;
 
         this._attachListeners(self);
         this._attachEvents();
@@ -87,9 +89,9 @@ define([
         },
 
         /**
-         * Loads table content. Makes ajax request and update table with returned data.
+         * Loads list content. Makes ajax request and update list items.
          *
-         * @param {string} url Url to table content resource, is uses for ajax request.
+         * @param {string} url Url to the web server controller action getting list items.
          */
         _getAndUpdateList: function(url) {
             var self = this;
@@ -98,7 +100,10 @@ define([
                 .done(function(html) {
                     if (self.options.addHistoryState === true) {
                         addHistoryState(url, html);
+                    } else {
+                        self._filterFormController.setCurrentUrlQuery(url);
                     }
+
                     self._updateList(html);
                 })
                 .fail(function (response) {
@@ -117,7 +122,12 @@ define([
     };
 
     function addHistoryState(url, html) {
-        history.pushState(html, '', url);
+        try {
+            history.pushState(html, '', url);
+        } catch (error) {
+            console.log('An error occurred while pushing data to the browser session history.');
+            console.log(error);
+        }
     }
 
     return ListController;
