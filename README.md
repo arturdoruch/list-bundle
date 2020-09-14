@@ -2,7 +2,7 @@
 
 Symfony bundle for pagination, sorting and filtering of list items.
 
-Build-in paginators can paginate:
+Bundle contains paginators supporting:
  
  * array
  * Doctrine\ORM\Query
@@ -12,10 +12,7 @@ Build-in paginators can paginate:
  * Doctrine\MongoDB\CursorInterface
  * MongoCursor
 
-For other database queries you can create own paginators. See section [paginator registration](#paginator-registration).
-
-For JavaScript support install (with `yarn` or `npm`) package [@arturdoruch/list](https://github.com/arturdoruch/js-list). 
-Package contains also file with CSS styles, styling the filter form and item list.
+For other database queries or cursors you can create own paginators. See section [paginator registration](#paginator-registration).
 
 ## Installation
 
@@ -35,6 +32,11 @@ Add the following code to the `composer.json` file, to the `repositories` block
 
 and run command `composer require arturdoruch/list-bundle`.
 
+### JavaScript support
+
+For JavaScript support install (with `yarn` or `npm`) package [@arturdoruch/list](https://github.com/arturdoruch/js-list). 
+Package contains also file with CSS styles, styling the filter form and item list.
+
 ## Bundle configuration
 
 ```yml
@@ -53,15 +55,14 @@ artur_doruch_list:
         page_items:
             prev_page_label: '&#8592; Prev'
             next_page_label: 'Next &#8594;'
-    # A collection of paginator providers, with "query class: paginator class" pairs.
-    paginator_providers: []
+    paginators: []
 ```
 
 ### Paginator registration
 
-1. Create paginator for database query (like Doctrine\ORM\Query).
+1. Create paginator for database query or cursor (like Doctrine\ORM\Query).
 The paginator must implement the `ArturDoruch\ListBundle\Paginator\PaginatorInterface` interface.
-2. Register paginator in configuration at path `artur_doruch_list.paginator_providers`.
+2. Add paginator class namespace in configuration at path `artur_doruch_list.paginators`.
 
 ## Usage
 
