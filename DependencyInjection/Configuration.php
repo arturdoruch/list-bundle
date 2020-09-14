@@ -8,6 +8,9 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
+/**
+ * @author Artur Doruch <arturdoruch@interia.pl>
+ */
 class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
@@ -17,6 +20,24 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('paginators')
+                    ->beforeNormalization()
+                    ->ifArray()
+                    ->then(function ($v) {
+                        foreach ($v as $paginatorClass) {
+                            try {
+                                PaginatorRegistry::validatePaginatorClass($paginatorClass);
+                            } catch (\InvalidArgumentException $e) {
+                                throw new InvalidConfigurationException(
+                                    'Invalid value for path "artur_doruch_list.paginators": '. $e->getMessage()
+                                );
+                            }
+                        }
+                    })
+                    ->end()
+                    ->info('Paginator class namespaces.')
+                    ->scalarPrototype()->end()
+                ->end()
                 ->arrayNode('query_parameter_names')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -51,24 +72,6 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
-                ->end()
-                ->arrayNode('paginators')
-                    ->beforeNormalization()
-                        ->ifArray()
-                        ->then(function ($v) {
-                            foreach ($v as $paginatorClass) {
-                                try {
-                                    PaginatorRegistry::validatePaginatorClass($paginatorClass);
-                                } catch (\InvalidArgumentException $e) {
-                                    throw new InvalidConfigurationException(
-                                        'Invalid value for path "artur_doruch_list.paginators": '. $e->getMessage()
-                                    );
-                                }
-                            }
-                        })
-                    ->end()
-                    ->info('Paginator class namespaces.')
-                    ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('filter_form')
                     ->addDefaultsIfNotSet()
