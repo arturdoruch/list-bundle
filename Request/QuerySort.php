@@ -3,9 +3,8 @@
 namespace ArturDoruch\ListBundle\Request;
 
 /**
- * Request query sort parameter helper.
- *
- * @todo Maybe convert class methods into non static.
+ * Helper class for creating and parsing URL query "sort" parameter of the
+ * HTTP request getting list items.
  *
  * @author Artur Doruch <arturdoruch@interia.pl>
  */
@@ -20,7 +19,7 @@ class QuerySort
     ];
 
     /**
-     * @var array The positions of the sort direction sign relative to the sort field.
+     * @var array Positions of the sorting direction sign relative to the sorting field.
      */
     private static $directionPositions = ['before', 'after'];
 
@@ -43,7 +42,7 @@ class QuerySort
      * @param string $ascending The value for sorting ascending direction.
      * @param string $descending The value for sorting descending direction.
      * @param string $position Position of the sorting direction relative to the sorting field. One of the values: "before", "after".
-     * @param string $separator Separator between values of sorting direction and sorting field.
+     * @param string $separator Separator between sorting direction and sorting field.
      */
     public static function setDirectionConfig(string $ascending, string $descending, string $position, string $separator)
     {
@@ -74,6 +73,8 @@ class QuerySort
     }
 
     /**
+     * Creates query "sort" parameter.
+     *
      * @param string $field
      * @param string $direction One of values: "asc", "desc".
      *
@@ -97,9 +98,11 @@ class QuerySort
     }
 
     /**
-     * @param string $value Formatted sorting parameters.
+     * Parses query "sort" parameter.
      *
-     * @return array The sorting properties as array pair "field" => "direction".
+     * @param string $value Query "sort" parameter.
+     *
+     * @return array An array with sorting properties, pair: "field" => "direction".
      */
     public static function parse(string $value): array
     {
