@@ -2,7 +2,6 @@
 
 namespace ArturDoruch\ListBundle;
 
-use ArturDoruch\ListBundle\Paginator;
 use ArturDoruch\ListBundle\Paginator\PaginatorRegistry;
 use ArturDoruch\ListBundle\Request\QueryParameterNames;
 use ArturDoruch\ListBundle\Request\QuerySort;
@@ -24,14 +23,12 @@ class ArturDoruchListBundle extends Bundle
             );
         }
 
-        PaginatorRegistry::add(Paginator\ArrayPaginator::class);
-        PaginatorRegistry::add(Paginator\DoctrinePaginator::class);
-        PaginatorRegistry::add(Paginator\DoctrineMongoDBPaginator::class);
-        PaginatorRegistry::add(Paginator\MongoDBPaginator::class);
+        if ($paginators = $this->container->getParameter('arturdoruch_list.paginators')) {
+            $paginatorRegistry = PaginatorRegistry::getInstance();
 
-        $paginators = $this->container->getParameter('arturdoruch_list.paginators');
-        foreach ($paginators as $paginatorClass) {
-            PaginatorRegistry::add($paginatorClass);
+            foreach ($paginators as $paginatorClass) {
+                $paginatorRegistry->add($paginatorClass);
+            }
         }
     }
 }

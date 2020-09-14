@@ -7,21 +7,44 @@ namespace ArturDoruch\ListBundle\Paginator;
  */
 class PaginatorRegistry
 {
+    private static $instance;
+
     /**
      * @var PaginatorInterface[]
      */
-    private static $classes = [];
+    private $classes = [];
+
+    public static function getInstance(): PaginatorRegistry
+    {
+        if (!self::$instance) {
+            self::$instance = (new self())
+                ->add(ArrayPaginator::class)
+                ->add(DoctrinePaginator::class)
+                ->add(DoctrineMongoDBPaginator::class)
+                ->add(MongoDBPaginator::class);
+        }
+
+        return self::$instance;
+    }
+
+    private function __construct()
+    {
+    }
 
     /**
      * Registers paginator.
      *
      * @param string $paginatorClass The paginator class namespace. The paginator must implement
      *                               the ArturDoruch\ListBundle\Paginator\PaginatorInterface.
+     *
+     * @return $this
      */
-    public static function add(string $paginatorClass)
+    public function add(string $paginatorClass)
     {
         self::validatePaginatorClass($paginatorClass);
-        self::$classes[] = $paginatorClass;
+        $this->classes[] = $paginatorClass;
+
+        return $this;
     }
 
     /**
@@ -32,16 +55,16 @@ class PaginatorRegistry
      *
      * @return PaginatorInterface
      */
-    public static function get($query, array $options = [])
+    public function get($query, array $options = [])
     {
-        foreach (self::$classes as $paginatorClass) {
+        foreach ($this->classes as $paginatorClass) {
             if ($paginatorClass::supportsQuery($query)) {
                 return new $paginatorClass($query, $options);
             }
         }
 
         throw new \RuntimeException(sprintf(
-            'Paginator for "%s" query is not registered.', is_object($query) ? get_class($query) : gettype($query)
+            'The paginator for query "%s" is not registered.', is_object($query) ? get_class($query) : gettype($query)
         ));
     }
 

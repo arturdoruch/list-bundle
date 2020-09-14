@@ -20,7 +20,7 @@ class Paginator
      */
     public static function paginate($query, $page, $limit, array $options = [])
     {
-        $paginator = PaginatorRegistry::get($query, $options);
+        $paginator = PaginatorRegistry::getInstance()->get($query, $options);
 
         return new Pagination($paginator, $page, $limit);
     }
