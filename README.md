@@ -1,6 +1,6 @@
 # ListBundle
 
-Symfony bundle for pagination, sorting and filtering list items.
+Symfony bundle for pagination, sorting and filtering of list items.
 
 Build-in paginators can paginate:
  
@@ -12,7 +12,10 @@ Build-in paginators can paginate:
  * Doctrine\MongoDB\CursorInterface
  * MongoCursor
 
-For other database queries you can create own paginators. See [#paginator-registration](register paginator).
+For other database queries you can create own paginators. See section [paginator registration](#paginator-registration).
+
+For JavaScript support install (with `yarn` or `npm`) package [@arturdoruch/list](https://github.com/arturdoruch/js-list). 
+Package contains also file with CSS styles, styling the filter form and item list.
 
 ## Installation
 
@@ -32,7 +35,7 @@ Add the following code to the `composer.json` file, to the `repositories` block
 
 and run command `composer require arturdoruch/list-bundle`.
 
-## Configuration options
+## Bundle configuration
 
 ```yml
 artur_doruch_list:
@@ -54,83 +57,24 @@ artur_doruch_list:
     paginator_providers: []
 ```
 
-## Paginator registration
+### Paginator registration
 
 1. Create paginator for database query (like Doctrine\ORM\Query).
 The paginator must implement the `ArturDoruch\ListBundle\Paginator\PaginatorInterface` interface.
-2. Register paginator in bundle configuration at path `artur_doruch_list.paginator_providers`.
+2. Register paginator in configuration at path `artur_doruch_list.paginator_providers`.
 
 ## Usage
 
 Description of use on the example of a list of books.
 
-Creating item list example:
-
-```php
-<?php
-
-namespace AppBundle\Controller;
-
-use AppBundle\Form\Type\BookFilterType;
-use ArturDoruch\ListBundle\ItemList;
-use ArturDoruch\ListBundle\Paginator;
-use ArturDoruch\ListBundle\Request\QueryParameterBag;
-use ArturDoruch\ListBundle\Sorting\SortChoiceCollection;
-use Symfony\Component\HttpFoundation\Request;
-
-class BookController
-{
-    public function list(Request $request)
-    {
-        // Optionally create filter form.
-        // Use named form to creating form with "filter" or other name, not depending on the FormType class.
-        $form = $this->get('form.factory')->createNamed('filter', BookFilterType::class);
-        $form->handleRequest($request);
-
-        // Filtering criteria.
-        $criteria = [];
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $criteria = $form->getData();
-        }
-               
-        // Get request query parameters (page, limit, sort).
-        $parameterBag = new QueryParameterBag($request);        
-        // Array with sorting field and order, pair ["field" => "order"]
-        $sort = $parameterBag->getSort();
-        
-        // Query book items.
-        // $bookRepository - Doctrine or other data source.
-        $books = $bookRepository->get($criteria, $sort);        
-        
-        $pagination = Paginator::paginate($books, $parameterBag->getPage(), $parameterBag->getLimit(100));
-        // Optionally set item limits (overrides values form default config "pagination.item_limits").
-        $pagination->setItemLimits([50, 100, 200]);
-
-        // Optionally define sorting choice collection to display select field with sorting options.
-        $sortChoiceCollection = new SortChoiceCollection();
-        $sortChoiceCollection
-            ->add('Lowest price', 'price', 'asc') // Sort books by price ascending.
-            ->add('Highest price', 'price', 'desc'); // Sort books by price descending.
-
-        return [
-            'bookList' => new ItemList($pagination, $form),
-        ];
-    }
-}
-```
-
 ### Filter form (optional)
 
-Create filter form type for filtering list items.
-You can:
-  * use the `ArturDoruch\ListBundle\Form\FilterType` class and add form filter fields in controller,
-  * create own type class, and (optionally) extend the `ArturDoruch\ListBundle\Form\FilterType` class
-  
-Filter form requirements:
+For filtering list items, must be created form type class. This can be done by:
 
- * Must have method type of "GET".
- * `csrf_protection` option should be set to false.
+  * Using the `ArturDoruch\ListBundle\Form\FilterType` class and add the form filter fields in controller,
+  * or creating own for type class and (optionally) extend the `ArturDoruch\ListBundle\Form\FilterType` class.
+  
+**The filter form must have method type of "GET" and `csrf_protection` option should be set to false.**
  
 Example of the filter form type class. 
 ```php
@@ -162,74 +106,129 @@ class BookFilterType extends FilterType
 }
 ```
 
-### Sorting choice collection (optional)
+### Creating controller getting the item list
 
-Optionally define sorting choice collection to display select field with sorting options.
+**The controller route method must be type of "GET".** 
+
+Example of controller action getting the item list:
 
 ```php
 <?php
 
-use ArturDoruch\ListBundle\Sorting\SortChoiceCollection;
+namespace AppBundle\Controller;
 
-$sortChoiceCollection = new SortChoiceCollection();
-$sortChoiceCollection
-    ->add('Lowest price', 'price', 'asc') // Sort books by price ascending.
-    ->add('Highest price', 'price', 'desc'); // Sort books by price descending.
+use AppBundle\Form\Type\BookFilterType;
+use ArturDoruch\ListBundle\ItemList;
+use ArturDoruch\ListBundle\Paginator;
+use ArturDoruch\ListBundle\Request\QueryParameterBag;
+use ArturDoruch\ListBundle\Sorting\SortChoiceCollection;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+class BookController
+{
+    /**
+     * @Route(
+     *     "/",
+     *     methods={"GET"}
+     * )
+     */
+    public function list(Request $request)
+    {
+        // (optional) Create filter form.
+        // Info: 
+        // The form name is used as the query parameter name in the request URL.
+        // Use named form for creating form with own name (e.g. "filter").
+        $form = $this->get('form.factory')->createNamed('filter', BookFilterType::class);
+        $form->handleRequest($request);
+
+        // Filtering criteria.
+        $criteria = [];
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $criteria = $form->getData();
+        }
+               
+        // Get request query parameters (page, limit, sort).
+        $parameterBag = new QueryParameterBag($request);        
+        // Array with sorting field and order, pair ["field" => "order"]
+        $sort = $parameterBag->getSort();
+        
+        // Get book items - array, query or cursor depend on database type.
+        $bookRepository = '';
+        $books = $bookRepository->get($criteria, $sort);        
+        
+        $pagination = Paginator::paginate($books, $parameterBag->getPage(), $parameterBag->getLimit(100));
+        // (optional) Set item limits (overrides values form default config "pagination.item_limits").
+        $pagination->setItemLimits([50, 100, 200]);
+
+        // (optional) Define SortChoiceCollection to display "select" field with sorting options.
+        // Alternatively you can render sorting link in twig template with "arturdoruch_list_sort_link" function.
+        $sortChoiceCollection = new SortChoiceCollection();
+        $sortChoiceCollection
+            ->add('Lowest price', 'price', 'asc') // Sort books by price ascending.
+            ->add('Highest price', 'price', 'desc'); // Sort books by price descending.
+
+        return [
+            'bookList' => new ItemList($pagination, $form, $sortChoiceCollection),
+        ];
+    }
+}
 ```
 
 ## Frontend
-
-Import `css/styles.css` file with CSS styles to styling displayed items list.
-
-Add JavaScript supports
-todo
 
 ### Twig functions
 
 #### Filtering
 
- * `arturdoruch_list_filter_form` - Renders the filter form.   
-    <br>Arguments:
-    * `formView` The Symfony\Component\Form\FormView object getting from ItemList object. For example "bookList.filterForm".
-    * `removeQuerySortParameter` bool (default: `false`)
-       Whether to remove query sort parameter from send form data. 
-       In other words, whether to reset sorting after filtering the list items.
+ * `arturdoruch_list_filter_form` - Renders the filter form.
+    
+    Arguments:
+    * `formView` *Symfony\Component\Form\FormView* - object getting from the ItemList object returned by controller.
+    * `config` array
+       * `resetSorting` *bool* - Whether to reset list sorting after filtering the list. 
+       If true query "sort" parameter is removed from the request query.
+       * `displayResetButton` *bool* - Whether to display button resetting the filter form elements.
 
 #### Pagination
 
  * `arturdoruch_list_pagination` - Renders pagination.
-    <br>Arguments:
-     * `pagination` The ArturDoruch\ListBundle\Pagination object getting from ItemList object. For example "bookList.pagination".
+ 
+    Arguments:
+    * `pagination` *ArturDoruch\ListBundle\Pagination* - object getting from the ItemList object returned by controller.
      
  * `arturdoruch_list_displayed_items` - Renders range of displayed list items.
-    <br>Arguments:
-    * `pagination` The ArturDoruch\ListBundle\Pagination object getting from ItemList object. For example "bookList.pagination".
+ 
+    Arguments:
+    * `pagination` *ArturDoruch\ListBundle\Pagination* - object getting from the ItemList object returned by controller.
     
- * `arturdoruch_list_items_limit_form` - Renders form and select field to change items limit (displayed number items per page).
-    <br>Arguments:
-    * `pagination` The ArturDoruch\ListBundle\Pagination object getting from ItemList object. For example "bookList.pagination".
+ * `arturdoruch_list_items_limit_form` - Renders form with "select" field to change items limit (displayed number items per page).
+    
+    Arguments:
+    * `pagination` *ArturDoruch\ListBundle\Pagination* - object getting from the ItemList object returned by controller.
       
  * `arturdoruch_list_items_and_pagination` - Renders all elements mentioned above: pagination, range of displayed list items
  select field changing items limit.
-    <br>Arguments:
-    * `pagination` The ArturDoruch\ListBundle\Pagination object getting from ItemList object. For example "bookList.pagination".
+ 
+    Arguments:
+    * `pagination` *ArturDoruch\ListBundle\Pagination* - object getting from the ItemList object returned by controller.
  
 #### Sorting 
  
  * `arturdoruch_list_sort_link` - Renders a link (an anchor) sorting the list items.
-    <br>Arguments:
-    * `label` string 
-    * `field` string The item field name used in repository for sorting items. For example Doctrine entity order field name.
-    * `initialDirection` string (default: `asc`) Initial sort direction. One of the values: "asc", "desc".
+    
+    Arguments:
+    * `label` - The link label
+    * `field` - The item field name used in repository for sorting items. For example Doctrine entity order field name.
+    * `initialDirection` (default: `asc`) - Initial sort direction. One of the values: "asc", "desc".
     
  * `arturdoruch_list_sort_form` - Renders select element with options to sort list items.
-    <br>Arguments:
-    * `sortChoiceCollection` The ArturDoruch\ListBundle\Sorting\SortChoiceCollection object getting from ItemList object.
-     For example "bookList.sortChoiceCollection".
+    
+    Arguments:
+    * `sortChoiceCollection` *ArturDoruch\ListBundle\Sorting\SortChoiceCollection* - object getting from the ItemList object returned by controller.
 
-### Templates
-
-Example of template displaying filter form and item list table.
+### Template
 
 ```twig
 {# base.html.twig #}
@@ -244,14 +243,18 @@ Example of template displaying filter form and item list table.
 </html>
 ```
 
+Template for use with AJAX request.
+
 ```twig
 {# ajax_list.html.twig #}
 {% block list %}{% endblock %}
 ```
 
+Example of template displaying all of the list parts.
+
 ```twig
+{# Update only list table (block list) when is AJAX request. #}
 {% extends app.request.xmlHttpRequest ?
-    {# Update only list items getting with AJAX #}
     '@App/ajax_list.html.twig':
     '@App/base.html.twig'
 %}

@@ -73,7 +73,7 @@ class PaginationExtension extends AbstractExtension
     }
 
     /**
-     * Renders form and select field to change (items limit) displayed number items per page.
+     * Renders form with "select" field to change (items limit) displayed number items per page.
      *
      * @param Environment $environment
      * @param Pagination $pagination
