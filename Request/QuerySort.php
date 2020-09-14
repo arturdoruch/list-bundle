@@ -5,6 +5,8 @@ namespace ArturDoruch\ListBundle\Request;
 /**
  * Request query sort parameter helper.
  *
+ * @todo Maybe convert class methods into non static.
+ *
  * @author Artur Doruch <arturdoruch@interia.pl>
  */
 class QuerySort
@@ -18,7 +20,12 @@ class QuerySort
     ];
 
     /**
-     * @var string Position of the sorting direction relative to the sorting field.
+     * @var array The positions of the sort direction sign relative to the sort field.
+     */
+    private static $directionPositions = ['before', 'after'];
+
+    /**
+     * @var string Position of the sorting direction sign relative to the sorting field.
      */
     private static $directionPosition = 'after';
 
@@ -45,14 +52,14 @@ class QuerySort
             'desc' => $descending,
         ];
 
-        if (!in_array($position, self::getDirectionPositions())) {
+        if (!in_array($position, self::$directionPositions)) {
             throw new \InvalidArgumentException(sprintf('Invalid direction position "%s".', $position));
         }
 
         self::$directionPosition = $position;
 
         if (preg_match('/[\?&=#]/', $separator)) {
-            throw new \InvalidArgumentException(sprintf('Direction separator "%s" has not allowed characters.', $separator));
+            throw new \InvalidArgumentException(sprintf('Direction separator "%s" has not allowed characters "\?&=#".', $separator));
         }
 
         self::$directionSeparator = $separator;
@@ -64,8 +71,6 @@ class QuerySort
                 ? $directionRegexp . preg_quote($separator) . $fieldRegexp
                 : $fieldRegexp . preg_quote($separator) . $directionRegexp
             ) . '$/';
-
-        //var_dump(self::$parsingPattern);
     }
 
     /**
@@ -74,9 +79,9 @@ class QuerySort
      *
      * @return string
      */
-    public static function create(string $field, string $direction)
+    public static function create(string $field, string $direction): string
     {
-        if (!in_array($direction, ['asc', 'desc'])) {
+        if ($direction !== 'asc' && $direction !== 'desc') {
             throw new \InvalidArgumentException(sprintf(
                 'Invalid sort direction "%s". Allowed values are: "asc", "desc".', $direction
             ));
@@ -92,11 +97,11 @@ class QuerySort
     }
 
     /**
-     * @param string $value Formatter sorting parameters.
+     * @param string $value Formatted sorting parameters.
      *
      * @return array The sorting properties as array pair "field" => "direction".
      */
-    public static function parse(string $value)
+    public static function parse(string $value): array
     {
         //$parts = explode(self::$directionSeparator, $value, 2);
         if (!preg_match(self::$parsingPattern, $value, $sort)) {
@@ -107,7 +112,7 @@ class QuerySort
 
         return [$sort['field'] => $sort['direction']];
 
-        if (!isset($parts[1])) {
+        /*if (!isset($parts[1])) {
             throw new \InvalidArgumentException(sprintf(
                 'Invalid query sort value "%s". The query do not match to the configured sort format.', $value
             ));
@@ -128,7 +133,7 @@ class QuerySort
             ));
         }
 
-        return [$field => $direction];
+        return [$field => $direction];*/
     }
 
     /**
@@ -136,16 +141,14 @@ class QuerySort
      *
      * @return string
      */
-    public static function getOppositeDirection(string $formattedDirection)
+    public static function getOppositeDirection(string $formattedDirection): string
     {
         return $formattedDirection === self::$directions['asc'] ? 'desc' : 'asc';
     }
 
-    /**
-     * @return array
-     */
-    public static function getDirectionPositions()
+
+    public static function getDirectionPositions(): array
     {
-        return ['before', 'after'];
+        return self::$directionPositions;
     }
 }
