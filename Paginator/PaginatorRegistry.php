@@ -8,72 +8,41 @@ namespace ArturDoruch\ListBundle\Paginator;
 class PaginatorRegistry
 {
     /**
-     * @var array
+     * @var PaginatorInterface[]
      */
-    private static $registry = [
-        \Doctrine\ORM\Query::class => DoctrinePaginator::class,
-        \Doctrine\ORM\QueryBuilder::class => DoctrinePaginator::class,
-        \Doctrine\ODM\MongoDB\Query\Query::class => DoctrineMongoDBPaginator::class,
-        \Doctrine\ODM\MongoDB\Query\Builder::class => DoctrineMongoDBPaginator::class,
-        \Doctrine\MongoDB\CursorInterface::class => DoctrineMongoDBPaginator::class,
-        \MongoCursor::class => MongoDBPaginator::class,
-    ];
+    private static $classes = [];
 
     /**
      * Registers paginator.
      *
-     * @param string $queryClass
-     * @param string $paginatorClass
+     * @param string $paginatorClass The paginator class namespace. The paginator must implement
+     *                               the ArturDoruch\ListBundle\Paginator\PaginatorInterface.
      */
-    public static function add(string $queryClass, string $paginatorClass)
+    public static function add(string $paginatorClass)
     {
-        self::validateQueryClass($queryClass);
         self::validatePaginatorClass($paginatorClass);
-
-        self::$registry[$queryClass] = $paginatorClass;
+        self::$classes[] = $paginatorClass;
     }
 
     /**
-     * Detects and gets a new instance of the paginator.
+     * Gets a new instance of the paginator for given query.
      *
      * @param mixed $query
-     * @param array $options
+     * @param array $options The paginator options.
      *
      * @return PaginatorInterface
      */
     public static function get($query, array $options = [])
     {
-        if (is_array($query)) {
-            return new ArrayPaginator($query);
+        foreach (self::$classes as $paginatorClass) {
+            if ($paginatorClass::supportsQuery($query)) {
+                return new $paginatorClass($query, $options);
+            }
         }
 
-        if (!is_object($query)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The paginator query must be type of array or an object, but got "%s".', $query
-            ));
-        }
-
-        $queryClass = get_class($query);
-
-        if (!isset(self::$registry[$queryClass])) {
-            throw new \RuntimeException(sprintf('There is no registered paginator for "%s" query.', $queryClass));
-        }
-
-        $paginatorClass = self::$registry[$queryClass];
-
-        return new $paginatorClass($query, $options);
-    }
-
-
-    public static function validateQueryClass(string $queryClass)
-    {
-        try {
-            new \ReflectionClass($queryClass);
-        } catch (\ReflectionException $e) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid namespace "%s" of the paginator query class.', $queryClass
-            ));
-        }
+        throw new \RuntimeException(sprintf(
+            'Paginator for "%s" query is not registered.', is_object($query) ? get_class($query) : gettype($query)
+        ));
     }
 
 

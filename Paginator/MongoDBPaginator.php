@@ -17,7 +17,13 @@ class MongoDBPaginator implements PaginatorInterface
      */
     private $totalItems;
 
-    public function __construct(\MongoCursor $cursor)
+    public static function supportsQuery($query): bool
+    {
+        return $query instanceof \MongoCursor;
+    }
+
+
+    public function __construct($cursor, array $options = [])
     {
         $this->cursor = $cursor;
         $this->totalItems = $this->cursor->count();

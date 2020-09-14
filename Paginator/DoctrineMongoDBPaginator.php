@@ -26,10 +26,16 @@ class DoctrineMongoDBPaginator implements PaginatorInterface
      */
     private $totalItems;
 
+    public static function supportsQuery($query): bool
+    {
+        return $query instanceof CursorInterface || $query instanceof Builder || $query instanceof Query;
+    }
+
     /**
      * @param Builder|Query|CursorInterface $query
+     * @param array $options
      */
-    public function __construct($query)
+    public function __construct($query, array $options = [])
     {
         if ($query instanceof CursorInterface) {
             $this->cursor = $query;

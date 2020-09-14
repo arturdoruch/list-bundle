@@ -10,11 +10,6 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * @todo Add providers configuration.
-     *
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -54,23 +49,22 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('paginator_providers')
+                ->arrayNode('paginators')
                     ->beforeNormalization()
                         ->ifArray()
                         ->then(function ($v) {
-                            foreach ($v as $queryClass => $providerClass) {
+                            foreach ($v as $paginatorClass) {
                                 try {
-                                    PaginatorRegistry::validateQueryClass($queryClass);
-                                    PaginatorRegistry::validatePaginatorClass($providerClass);
+                                    PaginatorRegistry::validatePaginatorClass($paginatorClass);
                                 } catch (\InvalidArgumentException $e) {
                                     throw new InvalidConfigurationException(
-                                        'Invalid configuration for path "artur_doruch_list.paginator_providers": '. $e->getMessage()
+                                        'Invalid value for path "artur_doruch_list.paginators": '. $e->getMessage()
                                     );
                                 }
                             }
                         })
                     ->end()
-                    ->info('The collection of paginator providers with "query class: paginator class" pairs.')
+                    ->info('Paginator class namespaces.')
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('filter_form')

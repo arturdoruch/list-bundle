@@ -21,10 +21,15 @@ class DoctrinePaginator implements PaginatorInterface
      */
     private $totalItems;
 
+    public static function supportsQuery($query): bool
+    {
+        return $query instanceof Query || $query instanceof QueryBuilder;
+    }
+
     /**
      * @param Query|QueryBuilder $query A Doctrine ORM query or query builder.
      * @param array $options
-     *  - fetchJoinCollection (bool) Whether the query joins a collection (false by default).
+     *  - fetchJoinCollection (bool) (default: false) Whether the query joins a collection.
      */
     public function __construct($query, array $options = [])
     {

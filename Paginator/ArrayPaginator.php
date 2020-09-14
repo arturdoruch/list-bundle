@@ -17,7 +17,14 @@ class ArrayPaginator implements PaginatorInterface
      */
     private $totalItems;
 
-    public function __construct(array $array)
+
+    public static function supportsQuery($query): bool
+    {
+        return is_array($query);
+    }
+
+
+    public function __construct($array, array $options = [])
     {
         $this->array = $array;
         $this->totalItems = count($this->array);
