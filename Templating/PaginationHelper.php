@@ -17,7 +17,7 @@ class PaginationHelper
 
     private $pageItemsConfig = [
         'page_items_limit' => 3,
-        'prev_page_label' => '&#8592; Prev',
+        'prev_page_label' => '&#8592; Previous',
         'next_page_label' => 'Next &#8594;',
     ];
 
@@ -29,7 +29,9 @@ class PaginationHelper
     /**
      * @param RouteHelper $routeHelper
      * @param array $pageItemsConfig
-     * @param array $itemLimits The default pagination item limits.
+     *  - prev_page_label Label of the pagination item to the previous list page.
+     *  - next_page_label Label of the pagination item to the next list page.
+     * @param array $itemLimits The default limits of list items displayed per page.
      */
     public function __construct(RouteHelper $routeHelper, array $pageItemsConfig, array $itemLimits)
     {

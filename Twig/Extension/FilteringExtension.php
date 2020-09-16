@@ -27,7 +27,7 @@ class FilteringExtension extends AbstractExtension
     /**
      * @var array Filtering config.
      */
-    private $config = [
+    private $filterFormConfig = [
         'display_reset_button' => true,
         'reset_sorting' => false,
     ];
@@ -36,7 +36,7 @@ class FilteringExtension extends AbstractExtension
     {
         $this->filterFormHelper = $filterFormHelper;
         $this->environment = $environment;
-        $this->config = $filterFormConfig + $this->config;
+        $this->filterFormConfig = $filterFormConfig + $this->filterFormConfig;
     }
 
 
@@ -52,15 +52,15 @@ class FilteringExtension extends AbstractExtension
     /**
      * @param FormView $formView
      * @param array $config
-     *  - resetSorting (bool) Whether to reset list sorting after filtering the list.
-     *                        If true query "sort" parameter is removed from the request query.
-     *  - displayResetButton (bool) Whether to display button resetting the filter form elements.
+     *  - reset_sorting (bool) Whether to reset list sorting after filtering the list.
+     *                         If true query "sort" parameter is removed from the request query.
+     *  - display_reset_button (bool) Whether to display button resetting the filter form elements.
      *
      * @return string
      */
     public function renderFilterForm(FormView $formView, array $config = [])
     {
-        $config = $this->config + $config;
+        $config = $this->filterFormConfig + $config;
 
         $data = $this->filterFormHelper->prepareFormData($formView, $config['reset_sorting']);
         $data['displayResetButton'] = $config['display_reset_button'];

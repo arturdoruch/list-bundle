@@ -42,7 +42,7 @@ class QuerySort
      * @param string $ascending The value for sorting ascending direction.
      * @param string $descending The value for sorting descending direction.
      * @param string $position Position of the sorting direction relative to the sorting field. One of the values: "before", "after".
-     * @param string $separator Separator between sorting direction and sorting field.
+     * @param string $separator Separator between values of sorting direction and sorting field.
      */
     public static function setDirectionConfig(string $ascending, string $descending, string $position, string $separator)
     {

@@ -67,7 +67,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('page_items')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('prev_page_label')->defaultValue('&#8592; Prev')->end()
+                                ->scalarNode('prev_page_label')->defaultValue('&#8592; Previous')->end()
                                 ->scalarNode('next_page_label')->defaultValue('Next &#8594;')->end()
                             ->end()
                         ->end()

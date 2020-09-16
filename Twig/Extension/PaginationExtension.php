@@ -56,7 +56,7 @@ class PaginationExtension extends AbstractExtension
     }
 
     /**
-     * Renders range of displayed items.
+     * Renders the range of displayed list items.
      *
      * @param Environment $environment
      * @param Pagination $pagination
