@@ -16,25 +16,13 @@ For other database queries or cursors you can create own paginators. See [pagina
 
 ## Installation
 
-#### Composer
-Add the following code to the `composer.json` file, to the `repositories` block
-
-```json
-{
-    "repositories": [
-        // ...
-        {
-            "type": "vcs",
-            "url": "https://github.com/arturdoruch/ListBundle"
-        }
-    ]
-}
+Run composer command
+ 
+```sh
+composer require arturdoruch/list-bundle
 ```
 
-and run command `composer require arturdoruch/list-bundle`.
-
-#### App kernel
-Register bundle in app kernel class.
+and register bundle in app kernel class.
 
 In Symfony 3
 ```php
@@ -65,7 +53,7 @@ Package contains also file with CSS styles, styling the filter form and item lis
 
 ## Bundle configuration
 
-[Bundle configuration options.](Resources/doc/bundle_configuration.md)
+See [bundle configuration options](Resources/doc/bundle_configuration.md).
 
 ## Usage
 
@@ -237,7 +225,7 @@ new ItemList($pagination, $form, $sortChoiceCollection);
 
 #### Twig functions
 
-Description of [Twig functions](Resources/doc/twig_functions.md) rendering the list components.
+See [Twig functions](Resources/doc/twig_functions.md) rendering the list components.
 
 #### Creating template displaying item list
 
