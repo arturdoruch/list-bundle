@@ -60,7 +60,7 @@ class FilteringExtension extends AbstractExtension
      */
     public function renderFilterForm(FormView $formView, array $config = [])
     {
-        $config = $this->filterFormConfig + $config;
+        $config += $this->filterFormConfig;
 
         $data = $this->filterFormHelper->prepareFormData($formView, $config['reset_sorting']);
         $data['displayResetButton'] = $config['display_reset_button'];
