@@ -35,7 +35,7 @@ define([
         this.form = new Form(formSelector);
         this.options = $.extend(defaultOptions, options);
         this.currentUrlQuery = null;
-        this.queryParameterNames = $('div[data-query-parameter-names]').data('queryParameterNames');
+        this.queryParameterNames = JSON.parse($('input[name="list__query-parameter-names"]').val());
 
         for (var name in this.queryParameterNames) {
             this.form.removeElement(this.queryParameterNames[name]);
