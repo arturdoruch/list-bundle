@@ -64,11 +64,12 @@ class FilteringExtension extends AbstractExtension
 
         $data = $this->filterFormHelper->prepareFormData($formView, $config['reset_sorting']);
         $data['displayResetButton'] = $config['display_reset_button'];
+        $data['form'] = $formView;
 
         $html = $this->environment->render('@ArturDoruchList/filtering/filterForm.html.twig', $data);
         // Add input elements with data required by JavaScript scripts.
         $html .= '<input type="hidden" name="list__query-parameter-names" value="' . htmlspecialchars(json_encode(QueryParameterNames::all())) . '">';
-        $html .= '<input type="hidden" name="list__filter-form__reset-sorting[' . $formView->vars['name'] . ']" value="' . (int) ($config['reset_sorting'] === true) . '">';
+        $html .= '<input type="hidden" name="list__filter-form__reset-sorting[' . $data['name'] . ']" value="' . (int) ($config['reset_sorting'] === true) . '">';
 
         return $html;
     }

@@ -25,6 +25,9 @@ class FilterFormHelper
      * @param bool $removeQuerySortParameter
      *
      * @return array
+     *  - name (string) The form name.
+     *  - action (string) The form action URL.
+     *  - queryParameters (array) The URL query parameters of the current route, except: "form-name", "page" and "sort".
      */
     public function prepareFormData(FormView $formView, bool $removeQuerySortParameter): array
     {
@@ -37,7 +40,7 @@ class FilterFormHelper
         $vars['attr']['novalidate'] = 'novalidate';
 
         $queryParameters = $this->routeHelper->getQueryParameters();
-        unset($queryParameters[$formName = $vars['name']]);
+        unset($queryParameters[$name = $vars['name']]);
         unset($queryParameters[QueryParameterNames::getPage()]);
 
         if ($removeQuerySortParameter) {
@@ -45,9 +48,8 @@ class FilterFormHelper
         }
 
         return [
-            'form' => $formView,
+            'name' => $name,
             'action' => $this->routeHelper->generateFormActionUrl(),
-            'formName' => $formName,
             'queryParameters' => $queryParameters,
         ];
     }
