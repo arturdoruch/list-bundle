@@ -14,6 +14,8 @@
         "symfony/framework-bundle": ">=3.3"
     },
     "autoload": {
-        "psr-4" : { "ArturDoruch\\ListBundle\\" : "" }
+        "psr-4": {
+            "ArturDoruch\\ListBundle\\": ""
+        }
     }
 }
