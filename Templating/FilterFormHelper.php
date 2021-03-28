@@ -11,14 +11,11 @@ use Symfony\Component\Form\FormView;
 class FilterFormHelper
 {
     /**
-     * @var RouteHelper
+     * @var RouteHelperInterface
      */
     private $routeHelper;
 
-    /**
-     * @param RouteHelper $routeHelper
-     */
-    public function __construct(RouteHelper $routeHelper)
+    public function __construct(RouteHelperInterface $routeHelper)
     {
         $this->routeHelper = $routeHelper;
     }
@@ -29,7 +26,7 @@ class FilterFormHelper
      *
      * @return array
      */
-    public function prepareFormData(FormView $formView, bool $removeQuerySortParameter)
+    public function prepareFormData(FormView $formView, bool $removeQuerySortParameter): array
     {
         $vars =& $formView->vars;
 

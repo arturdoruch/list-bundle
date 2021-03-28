@@ -11,7 +11,7 @@ use ArturDoruch\ListBundle\Request\QueryParameterNames;
 class PaginationHelper
 {
     /**
-     * @var RouteHelper
+     * @var RouteHelperInterface
      */
     private $routeHelper;
 
@@ -27,13 +27,13 @@ class PaginationHelper
     private $itemLimits;
 
     /**
-     * @param RouteHelper $routeHelper
+     * @param RouteHelperInterface $routeHelper
      * @param array $pageItemsConfig
      *  - prev_page_label Label of the pagination item to the previous list page.
      *  - next_page_label Label of the pagination item to the next list page.
      * @param array $itemLimits The default limits of list items displayed per page.
      */
-    public function __construct(RouteHelper $routeHelper, array $pageItemsConfig, array $itemLimits)
+    public function __construct(RouteHelperInterface $routeHelper, array $pageItemsConfig, array $itemLimits)
     {
         $this->routeHelper = $routeHelper;
         $this->pageItemsConfig = $pageItemsConfig + $this->pageItemsConfig;

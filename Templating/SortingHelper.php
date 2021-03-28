@@ -12,14 +12,11 @@ use ArturDoruch\ListBundle\Sorting\SortChoiceCollection;
 class SortingHelper
 {
     /**
-     * @var RouteHelper
+     * @var RouteHelperInterface
      */
     private $routeHelper;
 
-    /**
-     * @param RouteHelper $routeHelper
-     */
-    public function __construct(RouteHelper $routeHelper)
+    public function __construct(RouteHelperInterface $routeHelper)
     {
         $this->routeHelper = $routeHelper;
     }

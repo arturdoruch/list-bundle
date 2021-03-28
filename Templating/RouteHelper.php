@@ -3,17 +3,17 @@
 namespace ArturDoruch\ListBundle\Templating;
 
 use ArturDoruch\ListBundle\Request\QueryParameterNames;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * The helper methods for the current route.
  *
  * @author Artur Doruch <arturdoruch@interia.pl>
  */
-class RouteHelper
+class RouteHelper implements RouteHelperInterface
 {
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -22,23 +22,15 @@ class RouteHelper
      */
     private $data = ['path' => null];
 
-    /**
-     * @param Router $router
-     */
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
 
     /**
-     * Generates page url for current route.
-     *
-     * @param int $page
-     * @param string $sort
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function generateUrl($page = null, string $sort = null)
+    public function generateUrl(?int $page = null, ?string $sort = null): string
     {
         $data = $this->getData();
         $parameters = $data['routeAndQueryParameters'];
@@ -55,9 +47,9 @@ class RouteHelper
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function generateFormActionUrl(bool $resetPage = true)
+    public function generateFormActionUrl(bool $resetPage = true): string
     {
         $data = $this->getData();
         $parameters = $data['parameters'];
@@ -78,9 +70,7 @@ class RouteHelper
     }*/
 
     /**
-     * Gets request query parameters.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getQueryParameters(): array
     {
@@ -88,12 +78,9 @@ class RouteHelper
     }
 
     /**
-     * @return array
-     *  - name (string) The route name.
-     *  - parameters (array) Route and query parameters.
-     *  - queryParameters (array)
+     * @return array The route data.
      */
-    private function getData()
+    private function getData(): array
     {
         $context = $this->router->getContext();
         $pathInfo = $context->getPathInfo();
