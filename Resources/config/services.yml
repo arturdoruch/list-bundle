@@ -1,27 +1,39 @@
 services:
+    # Helpers
+    arturdoruch_list.templating.router_helper:
+        class: ArturDoruch\ListBundle\Templating\RouteHelper
+        arguments: ['@router']
+
     arturdoruch_list.templating.pagination_helper:
         class: ArturDoruch\ListBundle\Templating\PaginationHelper
-        autowire: true
         arguments:
-            $pageItemsConfig: '%arturdoruch_list.pagination.page_items%'
-            $itemLimits: '%arturdoruch_list.pagination.item_limits%'
+            - '@arturdoruch_list.templating.router_helper'
+            - '%arturdoruch_list.pagination.page_items%'
+            - '%arturdoruch_list.pagination.item_limits%'
 
+    arturdoruch_list.templating.filter_form_helper:
+        class: ArturDoruch\ListBundle\Templating\FilterFormHelper
+        arguments: ['@arturdoruch_list.templating.router_helper']
+
+    arturdoruch_list.templating.sorting_helper:
+        class: ArturDoruch\ListBundle\Templating\SortingHelper
+        arguments: ['@arturdoruch_list.templating.router_helper']
+
+    # Twig extensions
     arturdoruch_list.twig.pagination_extension:
         class: ArturDoruch\ListBundle\Twig\Extension\PaginationExtension
-        autowire: true
-        tags:
-            - { name: twig.extension }
+        arguments: ['@arturdoruch_list.templating.pagination_helper']
+        tags: ['twig.extension']
 
     arturdoruch_list.twig.filter_extension:
         class: ArturDoruch\ListBundle\Twig\Extension\FilteringExtension
-        autowire: true
         arguments:
-            $filterFormConfig: '%arturdoruch_list.filter_form%'
-        tags:
-            - { name: twig.extension }
+            - '@arturdoruch_list.templating.filter_form_helper'
+            - '@twig'
+            - '%arturdoruch_list.filter_form%'
+        tags: ['twig.extension']
 
     arturdoruch_list.twig.sorting_extension:
         class: ArturDoruch\ListBundle\Twig\Extension\SortingExtension
-        autowire: true
-        tags:
-            - { name: twig.extension }
+        arguments: ['@arturdoruch_list.templating.sorting_helper']
+        tags: ['twig.extension']
