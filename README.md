@@ -22,7 +22,7 @@ Run composer command
 composer require arturdoruch/list-bundle
 ```
 
-and register bundle in app kernel class.
+and register list-bundle and required other bundles in application Kernel class.
 
 In Symfony 3
 ```php
@@ -30,7 +30,9 @@ In Symfony 3
 public function registerBundles()
 {
     $bundles = [
-        // Other bundles.
+        // Other bundles
+        new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+        new Symfony\Bundle\TwigBundle\TwigBundle(),
         new ArturDoruch\ListBundle\ArturDoruchListBundle(),
     ];
 }    
@@ -40,11 +42,12 @@ In Symfony >= 4
 ```php
 // config/bundles.php
 return [
-    // Other bundles.
+    // Other bundles
+    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
+    Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
     ArturDoruch\ListBundle\ArturDoruchListBundle::class => ['all' => true],
 ];
 ```
-
 
 ### JavaScript support
 
